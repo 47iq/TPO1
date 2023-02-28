@@ -54,5 +54,13 @@ class SelectionSorterTest {
         assertArrayEquals(expectedArray, sortArray);
     }
 
+    @Test
+    void sortNullArray() {
+        int[] sortArray = null;
+        assertDoesNotThrow(() -> {
+            selectionSorter.sort(sortArray);
+        });
+    }
+
 
 }

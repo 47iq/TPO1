@@ -3,6 +3,7 @@ package main.part2;
 public class SelectionSorter implements Sorter{
     @Override
     public void sort(int[] array) {
+        if (array == null) return;
         int n = array.length;
 
         // One by one move boundary of unsorted subarray
