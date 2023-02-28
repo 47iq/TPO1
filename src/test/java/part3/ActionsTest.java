@@ -7,10 +7,12 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class ScuperfieldActionsTest {
+public class ActionsTest {
     Actions scuperfieldActions = new ScuperfieldActions();
+
+    Actions neznaykaAndKozlikActions = new NeznaykaAndKozlikActions();
 
     Station someStation = new SomeStation("TEST_STATION", 2);
 
@@ -18,6 +20,9 @@ public class ScuperfieldActionsTest {
             someStation, 1, new ScuperfieldActions());
 
     Passenger scuperfield = new SomePassenger("Scuperfield", PassengerCondition.REGULAR_AWAKE,
+            someStation, 1, new ScuperfieldActions());
+
+    SomeGroupOfPassengers neznaykaAndKozlik = new SomeGroupOfPassengers("Neznayka and Kozlik", PassengerCondition.REGULAR_AWAKE,
             someStation, 1, new ScuperfieldActions());
 
 
@@ -32,6 +37,13 @@ public class ScuperfieldActionsTest {
     void testRandomPassengerScuperfieldActions() {
         Exception exception = assertThrows(IllegalActionsTarget.class, () -> {
             scuperfieldActions.completeActions(randomPassenger);
+        });
+    }
+
+    @Test
+    void testRandomPassengerNeznaykaAndKozlikActions() {
+        Exception exception = assertThrows(IllegalActionsTarget.class, () -> {
+            neznaykaAndKozlikActions.completeActions(randomPassenger);
         });
     }
 
@@ -57,5 +69,12 @@ public class ScuperfieldActionsTest {
         String output1 = output + " small bump on the head.\n";
         String output2 = output + " big bump on the head.\n";
         Assertions.assertTrue(output1.equals(outputStreamCaptor.toString()) || output2.equals(outputStreamCaptor.toString()));
+    }
+
+    @Test
+    void testNezaykaAndKozlikActions() throws UnableToFall {
+        neznaykaAndKozlikActions.completeActions(neznaykaAndKozlik);
+        String output = String.format("Passengers %s are watching Horror movies\n", neznaykaAndKozlik.getName());
+        assertEquals(output, outputStreamCaptor.toString());
     }
 }
