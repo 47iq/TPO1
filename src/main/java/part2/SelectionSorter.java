@@ -1,6 +1,6 @@
-package main.part2;
+package part2;
 
-public class SelectionSorter implements Sorter{
+public class SelectionSorter implements Sorter {
     @Override
     public void sort(int[] array) {
         int n = array.length;

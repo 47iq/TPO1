@@ -1,4 +1,4 @@
-package main.part2;
+package part2;
 
 public interface Sorter {
     void sort(int[] array);
