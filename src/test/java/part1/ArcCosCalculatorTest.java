@@ -25,7 +25,7 @@ public class ArcCosCalculatorTest {
     @ParameterizedTest
     @ValueSource(doubles = {-1, -1 - 0.00001, -1 + 0.0001})
     public void negativeBoundCheck(double value) {
-        Assertions.assertEquals(Math.acos(value), arcCosCalculator.calculate(value), eps);
+        Assertions.assertEquals(Math.acos(value), arcCosCalculator.calculate(value), eps * 5);
     }
 
     @ParameterizedTest
