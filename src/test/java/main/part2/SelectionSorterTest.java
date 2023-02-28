@@ -3,6 +3,8 @@ package main.part2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SelectionSorterTest {
@@ -56,9 +58,8 @@ class SelectionSorterTest {
 
     @Test
     void sortNullArray() {
-        int[] sortArray = null;
-        assertDoesNotThrow(() -> {
-            selectionSorter.sort(sortArray);
+        assertThrowsExactly(NullPointerException.class, () -> {
+            selectionSorter.sort(null);
         });
     }
 
