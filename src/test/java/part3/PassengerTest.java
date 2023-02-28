@@ -11,31 +11,26 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PassengerTest {
 
-    Passenger asleepPassenger;
 
-    Passenger awakePassenger;
+    Station rightStation = new SomeStation("TEST_STATION", 2);
 
-    Passenger shockedPassenger;
+    Passenger asleepPassenger = new SomePassenger("ASLEEP", PassengerCondition.ASLEEP,
+            this.rightStation, 1, new ScuperfieldActions());
 
-    Passenger passengerGroup;
+    Passenger awakePassenger = new SomePassenger("AWAKE", PassengerCondition.REGULAR_AWAKE,
+            rightStation, 1, new ScuperfieldActions());
 
-    Station rightStation;
+    Passenger shockedPassenger = new SomePassenger("SHOCKED", PassengerCondition.SHOCKED,
+            rightStation, 1, new ScuperfieldActions());
 
-    TimeCounter timeCounter;
+    Passenger passengerGroup = new SomeGroupOfPassengers("GROUP", PassengerCondition.REGULAR_AWAKE,
+            rightStation, 1, new ScuperfieldActions());
+
+    TimeCounter timeCounter = new SomeTimeCounter(3);
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
 
     @BeforeEach
     public void setUp() {
-        this.rightStation = new SomeStation("TEST_STATION", 2);
-        this.asleepPassenger = new SomePassenger("ASLEEP", PassengerCondition.ASLEEP,
-                rightStation, 1, new ScuperfieldActions());
-        this.awakePassenger = new SomePassenger("AWAKE", PassengerCondition.REGULAR_AWAKE,
-                rightStation, 1, new ScuperfieldActions());
-        this.shockedPassenger = new SomePassenger("SHOCKED", PassengerCondition.SHOCKED,
-                rightStation, 1, new ScuperfieldActions());
-        this.passengerGroup = new SomeGroupOfPassengers("GROUP", PassengerCondition.REGULAR_AWAKE,
-                rightStation, 1, new ScuperfieldActions());
-        this.timeCounter = new SomeTimeCounter(3);
         System.setOut(new PrintStream(outputStreamCaptor));
     }
 
