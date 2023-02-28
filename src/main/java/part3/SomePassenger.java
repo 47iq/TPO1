@@ -69,7 +69,7 @@ public class SomePassenger extends SomePerson implements Passenger {
     }
 
     protected void commentOnSetCondition(PassengerCondition condition){
-        System.out.print(this + " is now " + condition + ". \n");
+        System.out.print(this + " is now " + condition + ".\n");
     }
 
     public void fallAsleepTime(TimeCounter counter) {

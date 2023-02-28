@@ -17,6 +17,9 @@ public class PassengerTest {
     Passenger asleepPassenger = new SomePassenger("ASLEEP", PassengerCondition.ASLEEP,
             this.rightStation, 1, new ScuperfieldActions());
 
+    Passenger nullStationPassenger = new SomePassenger("NULL", PassengerCondition.ASLEEP,
+            null, 1, new ScuperfieldActions());
+
     Passenger awakePassenger = new SomePassenger("AWAKE", PassengerCondition.REGULAR_AWAKE,
             rightStation, 1, new ScuperfieldActions());
 
@@ -79,6 +82,13 @@ public class PassengerTest {
     }
 
     @Test
+    void testSleepingPassengerFallAsleepNull() {
+        Exception exception = assertThrows(Exception.class, () -> {
+            this.asleepPassenger.fallAsleepTime(null);
+        });
+    }
+
+    @Test
     void testShockedLeavingTrain() {
         Station outStation = new SomeStation("TEST2", 2);
         this.shockedPassenger.commentOnLeavingTrain(outStation);
@@ -121,6 +131,22 @@ public class PassengerTest {
     void testAsleepLeavingTrain() {
         Exception exception = assertThrows(Exception.class, () -> {
             this.asleepPassenger.commentOnLeavingTrain(this.rightStation);
+        });
+    }
+
+    @Test
+    void testNullStationLeavingTrain() {
+        this.nullStationPassenger.commentOnLeavingTrain(rightStation);
+        String output = String.format("%s leaves the train at %s.\n%s says: \"Hey! That's not my station!\"",
+                this.nullStationPassenger.toString(), rightStation.toString(), this.nullStationPassenger.toString());
+        Assertions.assertEquals(output, outputStreamCaptor.toString()
+                .trim());
+    }
+
+    @Test
+    void testNullLeavingTrain() {
+        Exception exception = assertThrows(Exception.class, () -> {
+            this.asleepPassenger.commentOnLeavingTrain(null);
         });
     }
 }
