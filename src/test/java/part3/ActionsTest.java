@@ -23,7 +23,7 @@ public class ActionsTest {
             someStation, 1, new ScuperfieldActions());
 
     SomeGroupOfPassengers neznaykaAndKozlik = new SomeGroupOfPassengers("Neznayka and Kozlik", PassengerCondition.REGULAR_AWAKE,
-            someStation, 1, new ScuperfieldActions());
+            someStation, 1, new NeznaykaAndKozlikActions());
 
 
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
