@@ -100,8 +100,8 @@ class SomeTrainTest {
     @Test
     void testRemovePassengerCorrectDestination() {
         train = new SomeTrain(fromStation, conductor, timeCounter);
-        train.addPassenger(asleepPassenger);
-        train.removePassenger(asleepPassenger);
+        train.addPassenger(awakePassenger);
+        train.removePassenger(awakePassenger);
 
         String output = String.format("""
                        Train is staying at %s. The train's conductor's name is %s.
@@ -109,8 +109,8 @@ class SomeTrainTest {
                        Passenger %s leaves the train at %s.""",
                 train.getStation().getName(),
                 conductor.getName(),
-                asleepPassenger.getName(),
-                asleepPassenger.getName(),
+                awakePassenger.getName(),
+                awakePassenger.getName(),
                 train.getStation().getName());
         assertEquals(output, outputStreamCaptor.toString().trim());
         assertEquals(0, train.getPassengers().size());

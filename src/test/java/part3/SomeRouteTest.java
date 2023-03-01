@@ -61,8 +61,6 @@ class SomeRouteTest {
         String output = String.format("""
                 Train is staying at %s. The train's conductor's name is %s.
                 Train starts moving and goes away from %s.
-                The train disappears in the distance...
-                Train starts moving and goes away from %s.
                 The train disappears in the distance...""",
                 train.getStation().getName(),
                 basicConductor.getName(),
@@ -110,8 +108,6 @@ class SomeRouteTest {
                         Current station is Passenger Scuperfield's destination station.
                         Passenger Scuperfield leaves the train at TEST.
                         Train starts moving and goes away from TEST.
-                        The train disappears in the distance...
-                        Train starts moving and goes away from TESTT.
                         The train disappears in the distance...""";
         assertTrue(outputStreamCaptor.toString().trim().equals(output.formatted("small")) ||
                 outputStreamCaptor.toString().trim().equals(output.formatted("big")));
@@ -142,8 +138,6 @@ class SomeRouteTest {
                 Current station is Passengers Neznayka and Kozlik's destination station.
                 Passengers Neznayka and Kozlik leave the train at TEST.
                 Train starts moving and goes away from TEST.
-                The train disappears in the distance...
-                Train starts moving and goes away from TESTT.
                 The train disappears in the distance...""";
         assertEquals(output, outputStreamCaptor.toString().trim());
     }

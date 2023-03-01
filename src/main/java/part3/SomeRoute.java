@@ -43,6 +43,7 @@ public class SomeRoute implements Route {
             }
             else {
                 train.lastStart();
+                return;
             }
             ind++;
         }
