@@ -49,6 +49,10 @@ public class SomePassenger extends SomePerson implements Passenger {
     }
 
     public void commentOnLeavingTrain(Station station) {
+        if(station == null)
+            throw new NullPointerException();
+        if(getCondition().equals(PassengerCondition.ASLEEP))
+            return;
         System.out.print(this + " leaves the train at " + station + ".\n");
         if(station != destination) {
             if(!condition.equals(PassengerCondition.SHOCKED))
@@ -73,6 +77,8 @@ public class SomePassenger extends SomePerson implements Passenger {
     }
 
     public void fallAsleepTime(TimeCounter counter) {
+        if(counter == null)
+            throw new NullPointerException();
         if(!condition.equals(PassengerCondition.ASLEEP)) {
             System.out.print(this + " falls asleep because the time is " + counter + "\n");
             setCondition(PassengerCondition.ASLEEP);

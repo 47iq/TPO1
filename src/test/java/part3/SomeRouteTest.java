@@ -144,8 +144,7 @@ class SomeRouteTest {
                 Train starts moving and goes away from TEST.
                 The train disappears in the distance...
                 Train starts moving and goes away from TESTT.
-                The train disappears in the distance...
-                """;
+                The train disappears in the distance...""";
         assertEquals(output, outputStreamCaptor.toString().trim());
     }
 

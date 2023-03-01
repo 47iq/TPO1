@@ -24,6 +24,10 @@ public class SomeGroupOfPassengers extends SomePassenger implements Groupable {
     }
 
     public void commentOnLeavingTrain(Station station) {
+        if(station == null)
+            throw new NullPointerException();
+        if(getCondition().equals(PassengerCondition.ASLEEP))
+            return;
         System.out.print(this + " leave the train at " + station + ".\n");
         if(station != getDestination()) {
             if(!getCondition().equals(PassengerCondition.SHOCKED))
@@ -34,6 +38,8 @@ public class SomeGroupOfPassengers extends SomePassenger implements Groupable {
     }
 
     public void fallAsleepTime(TimeCounter counter) {
+        if(counter == null)
+            throw new NullPointerException();
         if(!super.getCondition().equals(PassengerCondition.ASLEEP)) {
             System.out.print(this + " fall asleep because the time is " + counter + "\n");
             super.setCondition(PassengerCondition.ASLEEP);

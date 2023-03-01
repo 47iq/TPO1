@@ -17,7 +17,7 @@ public class PassengerTest {
     Passenger asleepPassenger = new SomePassenger("ASLEEP", PassengerCondition.ASLEEP,
             this.rightStation, 1, new ScuperfieldActions());
 
-    Passenger nullStationPassenger = new SomePassenger("NULL", PassengerCondition.ASLEEP,
+    Passenger nullStationPassenger = new SomePassenger("NULL", PassengerCondition.REGULAR_AWAKE,
             null, 1, new ScuperfieldActions());
 
     Passenger awakePassenger = new SomePassenger("AWAKE", PassengerCondition.REGULAR_AWAKE,
@@ -129,9 +129,10 @@ public class PassengerTest {
 
     @Test
     void testAsleepLeavingTrain() {
-        Exception exception = assertThrows(Exception.class, () -> {
-            this.asleepPassenger.commentOnLeavingTrain(this.rightStation);
-        });
+        this.asleepPassenger.commentOnLeavingTrain(rightStation);
+        String output = "";
+        Assertions.assertEquals(output, outputStreamCaptor.toString()
+                .trim());
     }
 
     @Test
