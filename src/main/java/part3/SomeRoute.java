@@ -42,7 +42,9 @@ public class SomeRoute implements Route {
                 train.stopAt(station);
             }
             else {
-                train.lastStart();
+                train.start();
+                train.stopAt(station);
+                //train.lastStart();
                 return;
             }
             ind++;

@@ -32,6 +32,7 @@ public class PassengerTest {
     TimeCounter timeCounter = new SomeTimeCounter(3);
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
 
+
     @BeforeEach
     public void setUp() {
         System.setOut(new PrintStream(outputStreamCaptor));
