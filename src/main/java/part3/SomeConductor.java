@@ -95,6 +95,7 @@ public class SomeConductor extends SomePerson implements Conductor {
         if(depthOfSleep < 3) {
                 System.out.print(this + " wakes " + passenger + " up.\n");
                 passenger.setCondition(PassengerCondition.REGULAR_AWAKE);
+                passenger.leave(train);
         }
         else {
             String BEGINNING = "";

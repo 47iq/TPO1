@@ -20,7 +20,7 @@ public class SomeGroupOfPassengers extends SomePassenger implements Groupable {
     }
 
     protected void commentOnSetCondition(PassengerCondition condition){
-        System.out.print(this + " are now " + condition + ". \n");
+        System.out.print(this + " are now " + condition + ".\n");
     }
 
     public void commentOnLeavingTrain(Station station) {
