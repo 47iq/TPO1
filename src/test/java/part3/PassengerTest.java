@@ -84,7 +84,7 @@ public class PassengerTest {
             "GROUP, %s leave the train at %s.\\n%s say: \"Hey! That's not our station!\"",
             "NULL_STATION, %s leaves the train at %s.\\n%s says: \"Hey! That's not my station!\""
     })
-    void testShockedLeavingTrain(String pass, String out) {
+    void testCommentOnLeavingTrain(String pass, String out) {
         Passenger passenger = passengerMap.get(pass);
         Station outStation = new SomeStation("TEST2", 2);
         passenger.commentOnLeavingTrain(outStation);

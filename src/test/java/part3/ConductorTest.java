@@ -2,81 +2,68 @@ package part3;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ConductorTest {
 
-    private final Conductor basicConductor = new SomeConductor("BASIC", 100);
-
     private final Station rightStation = new SomeStation("TEST", 2);
-
-    private final Passenger awakePassenger = new SomePassenger("AWAKE", PassengerCondition.REGULAR_AWAKE,
-            rightStation, 1, new ScuperfieldActions());
-
-    private final Passenger lightAsleepPassenger = new SomePassenger("ASLEEP", PassengerCondition.ASLEEP,
-            this.rightStation, 1, new ScuperfieldActions());
-
-    private final Passenger mediumAsleepPassenger = new SomePassenger("ASLEEP", PassengerCondition.ASLEEP,
-            this.rightStation, 5, new ScuperfieldActions());
-
-    private final Passenger deepAsleepPassenger = new SomePassenger("ASLEEP", PassengerCondition.ASLEEP,
-            this.rightStation, 10, new ScuperfieldActions());
-
     private final  Conductor neverForgettingConductor = new SomeConductor("NEVER_FORGETFUL", 0);
 
     private final TimeCounter timeCounter = new SomeTimeCounter(3);
 
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
 
+    Map<String, Passenger> passengerMap = new HashMap<String, Passenger>() {{
+        put("ASLEEP", new SomePassenger("ASLEEP",PassengerCondition.ASLEEP,
+                rightStation, 1, new ScuperfieldActions()));
+        put("LIGHT_ASLEEP", new SomePassenger("LIGHT_ASLEEP",PassengerCondition.ASLEEP,
+                rightStation, 1, new ScuperfieldActions()));
+        put("MEDIUM_ASLEEP", new SomePassenger("MEDIUM_ASLEEP",PassengerCondition.ASLEEP,
+                rightStation, 5, new ScuperfieldActions()));
+        put("DEEPLY_ASLEEP", new SomePassenger("DEEPLY_ASLEEP",PassengerCondition.ASLEEP,
+                rightStation, 10, new ScuperfieldActions()));
+        put("AWAKE", new SomePassenger("AWAKE", PassengerCondition.REGULAR_AWAKE,
+                rightStation, 1, new ScuperfieldActions()));
+        put("NULL_STATION",new SomePassenger("NULL", PassengerCondition.REGULAR_AWAKE,
+                null, 1, new ScuperfieldActions()));
+        put("SHOCKED", new SomePassenger("SHOCKED", PassengerCondition.SHOCKED,
+                rightStation, 1, new ScuperfieldActions()));
+        put("GROUP", new SomeGroupOfPassengers("GROUP", PassengerCondition.REGULAR_AWAKE,
+                rightStation, 1, new ScuperfieldActions()));
+    }};
 
-    @Test
-    void testDoubleCheckBasic() {
-        Train train = new SomeTrain(new SomeStation("TEST1", 2), basicConductor, timeCounter);
-        train.addPassenger(awakePassenger);
+    Map<String, Conductor> conductorMap = new HashMap<String, Conductor>() {{
+        put("BASIC", new SomeConductor("BASIC", 100));
+        put("NEVER_FORGETFUL", new SomeConductor("NEVER_FORGETFUL", 0));
+    }};
+
+
+    @ParameterizedTest
+    @CsvSource({
+            "BASIC,AWAKE,BASIC checks if he forgot to tell anybody to leave the train.\\nOh no! BASIC forgot to tell Passenger AWAKE to leave.\\nBASIC decides to wait till the next station and not to say Passenger AWAKE that he skipped his station{{ because BASIC wants to avoid explanations.\\nBASIC tries to get more concentrated. He won't forget about any passenger from now on.",
+            "BASIC,'',BASIC checks if he forgot to tell anybody to leave the train.\\nBASIC didn't forget anyone.",
+            "NEVER_FORGETFUL,AWAKE,NEVER_FORGETFUL checks if he forgot to tell anybody to leave the train.\\nNEVER_FORGETFUL didn't forget anyone."
+    })
+    void testDoubleCheck(String conductorName, String passengerName, String out) {
+        Conductor conductor = conductorMap.get(conductorName);
+        Passenger passenger = passengerMap.get(passengerName);
+        Train train = new SomeTrain(new SomeStation("TEST2", 2), conductor, timeCounter);
+        if(passenger != null)
+            train.addPassenger(passenger);
         train.stopAt(rightStation);
         System.setOut(new PrintStream(outputStreamCaptor));
-        basicConductor.doubleCheck(train);
-        String output = String.format("""
-                        %s checks if he forgot to tell anybody to leave the train.
-                        Oh no! %s forgot to tell %s to leave.
-                        %s decides to wait till the next station and not to say %s that he skipped his station, because %s wants to avoid explanations.
-                        %s tries to get more concentrated. He won't forget about any passenger from now on.""",
-                basicConductor, basicConductor, awakePassenger, basicConductor, awakePassenger,basicConductor,basicConductor);
-        Assertions.assertEquals(output, outputStreamCaptor.toString()
-                .trim());
-    }
-
-    @Test
-    void testDoubleCheckNoPassengers() {
-        Train train = new SomeTrain(new SomeStation("TEST1", 2), basicConductor, timeCounter);
-        train.stopAt(rightStation);
-        System.setOut(new PrintStream(outputStreamCaptor));
-        basicConductor.doubleCheck(train);
-        String output = String.format("""
-                        %s checks if he forgot to tell anybody to leave the train.
-                        %s didn't forget anyone.""",
-                basicConductor, basicConductor);
-        Assertions.assertEquals(output, outputStreamCaptor.toString()
-                .trim());
-    }
-
-    @Test
-    void testDoubleCheckNeverForgetting() {
-        Train train = new SomeTrain(new SomeStation("TEST1", 2), neverForgettingConductor, timeCounter);
-        train.addPassenger(awakePassenger);
-        train.stopAt(rightStation);
-        System.setOut(new PrintStream(outputStreamCaptor));
-        neverForgettingConductor.doubleCheck(train);
-        String output = String.format("""
-                        %s checks if he forgot to tell anybody to leave the train.
-                        %s didn't forget anyone.""",
-                neverForgettingConductor, neverForgettingConductor);
-        Assertions.assertEquals(output, outputStreamCaptor.toString()
-                .trim());
+        conductor.doubleCheck(train);
+        String expected = outputStreamCaptor.toString().trim().replace("\n", "\\n");
+        expected = expected.replace(",", "{{");
+        Assertions.assertEquals(out, expected);
     }
 
     @Test
@@ -86,100 +73,25 @@ public class ConductorTest {
         });
     }
 
-    @Test
-    void testCheckPassengersOutNeverForgetting() {
-        Train train = new SomeTrain(new SomeStation("TEST1", 2), neverForgettingConductor, timeCounter);
+    @ParameterizedTest
+    @CsvSource({
+            "NEVER_FORGETFUL,AWAKE,NEVER_FORGETFUL says: \"Passenger AWAKE{{ you have to leave now!\"\\nCurrent station is Passenger AWAKE's destination station.\\nPassenger AWAKE leaves the train at TEST.",
+            "NEVER_FORGETFUL,LIGHT_ASLEEP,NEVER_FORGETFUL says: \"Passenger LIGHT_ASLEEP{{ you have to leave now!\"\\nPassenger LIGHT_ASLEEP didn't hear NEVER_FORGETFUL cause Passenger LIGHT_ASLEEP is sleeping.\\nNEVER_FORGETFUL shakes Passenger LIGHT_ASLEEP.\\nNEVER_FORGETFUL wakes Passenger LIGHT_ASLEEP up.\\nPassenger LIGHT_ASLEEP is now awake.\\nCurrent station is Passenger LIGHT_ASLEEP's destination station.\\nPassenger LIGHT_ASLEEP leaves the train at TEST.",
+            "NEVER_FORGETFUL,MEDIUM_ASLEEP,NEVER_FORGETFUL says: \"Passenger MEDIUM_ASLEEP{{ you have to leave now!\"\\nPassenger MEDIUM_ASLEEP didn't hear NEVER_FORGETFUL cause Passenger MEDIUM_ASLEEP is sleeping.\\nNEVER_FORGETFUL shakes Passenger MEDIUM_ASLEEP.\\nPassenger MEDIUM_ASLEEP is still sleeping. NEVER_FORGETFUL takes out tongs and starts knocking on his shelf.\\nPassenger MEDIUM_ASLEEP is now awake.\\nCurrent station is Passenger MEDIUM_ASLEEP's destination station.\\nPassenger MEDIUM_ASLEEP leaves the train at TEST.",
+            "NEVER_FORGETFUL,DEEPLY_ASLEEP,NEVER_FORGETFUL says: \"Passenger DEEPLY_ASLEEP{{ you have to leave now!\"\\nPassenger DEEPLY_ASLEEP didn't hear NEVER_FORGETFUL cause Passenger DEEPLY_ASLEEP is sleeping.\\nNEVER_FORGETFUL shakes Passenger DEEPLY_ASLEEP.\\nPassenger DEEPLY_ASLEEP is still sleeping. NEVER_FORGETFUL realizes that he won't wake up and gets angry. NEVER_FORGETFUL shouts into Passenger DEEPLY_ASLEEP's ear.\\nPassenger DEEPLY_ASLEEP is now awake.\\nNEVER_FORGETFUL kicks Passenger DEEPLY_ASLEEP out of the train.\\nPassenger DEEPLY_ASLEEP is now shocked.\\nCurrent station is Passenger DEEPLY_ASLEEP's destination station.\\nPassenger DEEPLY_ASLEEP leaves the train at TEST.",
+            "BASIC,AWAKE,''"
+    })
+    void testCheckPassengersOut(String conductorName, String passengerName, String out) {
+        Conductor conductor = conductorMap.get(conductorName);
+        Passenger passenger = passengerMap.get(passengerName);
+        Train train = new SomeTrain(new SomeStation("TEST2", 2), conductor, timeCounter);
         train.stopAt(rightStation);
-        train.addPassenger(awakePassenger);
+        if(passenger != null)
+            train.addPassenger(passenger);
         System.setOut(new PrintStream(outputStreamCaptor));
-        neverForgettingConductor.checkPassengersOut(train);
-        String output = String.format("""
-                       %s says: "%s, you have to leave now!"
-                       Current station is %s's destination station.
-                       %s leaves the train at %s.""",
-                neverForgettingConductor, awakePassenger, awakePassenger, awakePassenger, rightStation);
-        Assertions.assertEquals(output, outputStreamCaptor.toString()
-                .trim());
-    }
-
-    @Test
-    void testCheckLightlyAsleepPassengersOutNeverForgetting() {
-        Train train = new SomeTrain(new SomeStation("TEST1", 2), neverForgettingConductor, timeCounter);
-        train.stopAt(rightStation);
-        train.addPassenger(lightAsleepPassenger);
-        System.setOut(new PrintStream(outputStreamCaptor));
-        neverForgettingConductor.checkPassengersOut(train);
-        String output = String.format("""
-                        %s says: "%s, you have to leave now!"
-                        %s didn't hear %s cause %s is sleeping.
-                        %s shakes %s.
-                        %s wakes %s up.
-                        %s is now awake.
-                        Current station is %s's destination station.
-                        %s leaves the train at %s.""",
-                neverForgettingConductor, lightAsleepPassenger, lightAsleepPassenger, neverForgettingConductor, lightAsleepPassenger, neverForgettingConductor,
-                lightAsleepPassenger, neverForgettingConductor,
-                lightAsleepPassenger, lightAsleepPassenger, lightAsleepPassenger, lightAsleepPassenger, rightStation);
-        Assertions.assertEquals(output, outputStreamCaptor.toString()
-                .trim());
-    }
-
-    @Test
-    void testCheckMediumAsleepPassengersOutNeverForgetting() {
-        Train train = new SomeTrain(new SomeStation("TEST1", 2), neverForgettingConductor, timeCounter);
-        train.stopAt(rightStation);
-        train.addPassenger(mediumAsleepPassenger);
-        System.setOut(new PrintStream(outputStreamCaptor));
-        neverForgettingConductor.checkPassengersOut(train);
-        String output = String.format("""
-                        %s says: "%s, you have to leave now!"
-                        %s didn't hear %s cause %s is sleeping.
-                        %s shakes %s.
-                        %s is still sleeping. %s takes out tongs and starts knocking on his shelf.
-                        %s is now awake.
-                        Current station is %s's destination station.
-                        %s leaves the train at %s.""",
-                neverForgettingConductor, mediumAsleepPassenger, mediumAsleepPassenger, neverForgettingConductor, mediumAsleepPassenger, neverForgettingConductor,
-                mediumAsleepPassenger, mediumAsleepPassenger,
-                neverForgettingConductor, mediumAsleepPassenger, mediumAsleepPassenger, mediumAsleepPassenger, rightStation);
-        Assertions.assertEquals(output, outputStreamCaptor.toString()
-                .trim());
-    }
-
-    @Test
-    void testCheckDeepAsleepPassengersOutNeverForgetting() {
-        Train train = new SomeTrain(new SomeStation("TEST1", 2), neverForgettingConductor, timeCounter);
-        train.stopAt(rightStation);
-        train.addPassenger(deepAsleepPassenger);
-        System.setOut(new PrintStream(outputStreamCaptor));
-        neverForgettingConductor.checkPassengersOut(train);
-        String output = String.format("""
-                        %s says: "%s, you have to leave now!"
-                        %s didn't hear %s cause %s is sleeping.
-                        %s shakes %s.
-                        %s is still sleeping. %s realizes that he won't wake up and gets angry. %s shouts into %s's ear.
-                        %s is now awake.
-                        %s kicks %s out of the train.
-                        %s is now shocked.
-                        Current station is %s's destination station.
-                        %s leaves the train at %s.""",
-                neverForgettingConductor, deepAsleepPassenger, deepAsleepPassenger, neverForgettingConductor, deepAsleepPassenger, neverForgettingConductor,
-                deepAsleepPassenger, deepAsleepPassenger, neverForgettingConductor, neverForgettingConductor, deepAsleepPassenger,
-                deepAsleepPassenger, neverForgettingConductor, deepAsleepPassenger, deepAsleepPassenger, deepAsleepPassenger, deepAsleepPassenger, rightStation);
-        Assertions.assertEquals(output, outputStreamCaptor.toString()
-                .trim());
-    }
-
-
-    @Test
-    void testCheckPassengersOut() {
-        Train train = new SomeTrain(new SomeStation("TEST1", 2), basicConductor, timeCounter);
-        train.stopAt(rightStation);
-        train.addPassenger(awakePassenger);
-        System.setOut(new PrintStream(outputStreamCaptor));
-        basicConductor.checkPassengersOut(train);
-        String output = "";
-        Assertions.assertEquals(output, outputStreamCaptor.toString()
-                .trim());
+        conductor.checkPassengersOut(train);
+        String expected = outputStreamCaptor.toString().trim().replace("\n", "\\n");
+        expected = expected.replace(",", "{{");
+        Assertions.assertEquals(out, expected);
     }
 }
