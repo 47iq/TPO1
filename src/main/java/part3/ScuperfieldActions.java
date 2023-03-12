@@ -95,7 +95,7 @@ public class ScuperfieldActions implements Actions{
         }
 
         Cane lostCane = new Cane("Cane", 10000);
-        Bottle bottle = new Bottle("Bottle", "Soda", 10, 2, "sweet, great smelling, " +
+        Bottle bottle = new Bottle("BottleImpl", "Soda", 10, 2, "sweet, great smelling, " +
                 "pleasantly pinching mouth");
         makeCalculations(bottle, lostCane);
         bottle.tilt();
