@@ -65,7 +65,7 @@ public class TrainImpl implements Train {
         if(this.condition != TrainCondition.STAYING) {
             throw new IllegalStateException("Can't remove passenger while the train is on move.");
         }
-        if(passenger.getPassengerState().equals(PassengerState.LIGHTLY_ASLEEP) | passenger.getPassengerState().equals(PassengerState.DEEPLY_ASLEEP)) {
+        if(passenger.getPassengerState().equals(PassengerState.LIGHTLY_ASLEEP) || passenger.getPassengerState().equals(PassengerState.DEEPLY_ASLEEP)) {
             throw new IllegalStateException("Can't remove sleeping passenger.");
         }
         boolean isRemoved = this.passengers.remove(passenger);
@@ -74,6 +74,18 @@ public class TrainImpl implements Train {
         }
         System.out.printf("%s leaves the %s at %s.\n", passenger, this, this.currentStation);
         passenger.reactOnLeavingTrain(this.currentStation);
+    }
+
+    public Set<Passenger> getPassengers() {
+        return passengers;
+    }
+
+    public TrainCondition getCondition() {
+        return condition;
+    }
+
+    public Station getCurrentStation() {
+        return currentStation;
     }
 
     @Override

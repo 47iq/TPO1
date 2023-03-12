@@ -37,7 +37,7 @@ public class Main {
         Set<Passenger> passengers = new HashSet<>();
         passengers.add(neznaykaAndKozlik);
         passengers.add(scuperfield);
-        Conductor conductor = new ConductorImpl(true);
+        Conductor conductor = new ConductorImpl();
         Train train = new TrainImpl(start, passengers, conductor);
         train.startFromStation();
         neznaykaAndKozlik.completeActions();

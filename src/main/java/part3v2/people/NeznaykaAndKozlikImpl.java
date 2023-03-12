@@ -11,6 +11,12 @@ public class NeznaykaAndKozlikImpl extends Passenger {
         this.name = "Neznayka and Kozlik";
     }
 
+    public NeznaykaAndKozlikImpl(Station station, PassengerState passengerState) {
+        this.arrivalStation = station;
+        this.passengerState = passengerState;
+        this.name = "Neznayka and Kozlik";
+    }
+
     @Override
     protected void completeActionsInternal() {
         System.out.printf("%s is watching horror movies.\n", this);

@@ -7,12 +7,9 @@ import java.util.Set;
 
 public class ConductorImpl implements Conductor{
 
-    private boolean canForget;
-
     Set<Passenger> forgottenPassengers = new HashSet<>();
 
-    public ConductorImpl(boolean canForget) {
-        this.canForget = canForget;
+    public ConductorImpl() {
     }
 
     @Override
