@@ -61,6 +61,13 @@ public class NeznaykaAndKozlikImplTest {
 
     @ParameterizedTest
     @EnumSource(value = PassengerState.class, names = {"LIGHTLY_ASLEEP", "DEEPLY_ASLEEP"})
+    void testFallAsleep(PassengerState state) {
+        neznaykaAndKozlik.fallAsleep(state.equals(PassengerState.DEEPLY_ASLEEP));
+        assertEquals(neznaykaAndKozlik.getPassengerState(), state);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = PassengerState.class, names = {"LIGHTLY_ASLEEP", "DEEPLY_ASLEEP"})
     void testReactOnLeavingTrainInSleep(PassengerState state) {
         neznaykaAndKozlik.setPassengerState(state);
         assertThrows(IllegalStateException.class, () -> {

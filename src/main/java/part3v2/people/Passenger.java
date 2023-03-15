@@ -54,10 +54,6 @@ public abstract class Passenger {
         System.out.printf("%s is now %s.\n", this, passengerState.toString().toLowerCase(Locale.ROOT));
     }
 
-    public boolean isAreActionsCompleted() {
-        return areActionsCompleted;
-    }
-
     public Station getArrivalStation() {
         return arrivalStation;
     }

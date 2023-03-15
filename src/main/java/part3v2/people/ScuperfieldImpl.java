@@ -22,15 +22,6 @@ public class ScuperfieldImpl extends Passenger {
         this.name = "Scuperfield";
     }
 
-    public ScuperfieldImpl(Item freeItem, Item lostItem, Station station, Bottle bottle, PassengerState passengerState) {
-        this.passengerState = passengerState;
-        this.freeItem = freeItem;
-        this.lostItem = lostItem;
-        this.bottle = bottle;
-        this.arrivalStation = station;
-        this.name = "Scuperfield";
-    }
-
     @Override
     public void completeActionsInternal() {
         bottle.bendDown(this);
@@ -43,8 +34,8 @@ public class ScuperfieldImpl extends Passenger {
     }
 
     public double calculateLoss() {
-        if(freeItem.getCost() == 0 || lostItem.getCost() == 0)
-            throw new IllegalArgumentException("Item cost can't be zero.");
+        if(freeItem.getCost() <= 0 || lostItem.getCost() <= 0)
+            throw new IllegalArgumentException("Item cost can't be zero or negative.");
         return lostItem.getCost() / freeItem.getCost();
     }
 }
